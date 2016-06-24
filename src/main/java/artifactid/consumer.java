@@ -1,7 +1,6 @@
 package artifactid;
 
 import javax.jms.Connection;
-import javax.jms.Destination;
 import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
@@ -33,7 +32,7 @@ public class consumer implements ExceptionListener {
 	Connection conn = null;
 	Session session = null;
 	MessageConsumer consumidor = null;
-    Gson gson = null;;
+	Gson gson = new GsonBuilder().create();
 	
 	@JmsListener(destination = "Consumer.A.VirtualTopic.PruebaAlex")
 	public void receiveQueue(String text) {
@@ -48,45 +47,9 @@ public class consumer implements ExceptionListener {
 	@RequestMapping("/")
 	String home() {
 		
-		try {
-			if (conn == null){
-				init();
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
 		return "<strong>Consumer</strong> <br>Recibiendo mensajes</br>";
 	}
 
-	private void init() {
-		// TODO Auto-generated method stub
-		
-		conn = ConsumerConnection.getConnection();
-		
-		try{
-			// Create a Session
-			session = conn.createSession(false, Session.AUTO_ACKNOWLEDGE);
-
-            // Create the destination (Topic or Queue)
-            Destination destination = session.createQueue("Consumer.A.VirtualTopic.PruebaAlex");
-
-            // Create a MessageProducer from the Session to the Topic or Queue
-            consumidor = session.createConsumer(destination);
-            
-		
-		 }
-	    catch (Exception e) {
-	        System.out.println("Init Caught: " + e);
-	        e.printStackTrace();
- 	    }
-		
-		// crear parseador json
-		gson = new GsonBuilder().create();
-
-	}
     public static void main(String[] args) throws Exception {
         SpringApplication.run(consumer.class, args);
         
