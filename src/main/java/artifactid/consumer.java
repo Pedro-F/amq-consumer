@@ -4,10 +4,8 @@ import javax.jms.Connection;
 import javax.jms.Destination;
 import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
-import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -35,17 +33,16 @@ public class consumer implements ExceptionListener {
 	Connection conn = null;
 	Session session = null;
 	MessageConsumer consumidor = null;
+    Gson gson = null;;
+
 	
-	
-	@JmsListener(destination = "Consumer.A.VirtualTopic.PruebaAlex")
+	@JmsListener(concurrency= "10", destination = "Consumer.A.VirtualTopic.PruebaAlex")
 	public void receiveQueue(String text) {
+		
 		System.out.println(text);
 		
 		Evento myEvento;
         
-        
-        
-        Gson gson = new GsonBuilder().create();
         myEvento = gson.fromJson(text, Evento.class);
 	}
 	
@@ -86,6 +83,10 @@ public class consumer implements ExceptionListener {
 	        System.out.println("Init Caught: " + e);
 	        e.printStackTrace();
  	    }
+		
+		// crear parseador json
+		gson = new GsonBuilder().create();
+
 	}
     public static void main(String[] args) throws Exception {
         SpringApplication.run(consumer.class, args);
