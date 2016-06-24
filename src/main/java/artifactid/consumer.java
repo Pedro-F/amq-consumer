@@ -35,7 +35,7 @@ public class consumer implements ExceptionListener {
 	MessageConsumer consumidor = null;
     Gson gson = null;;
 	
-	@JmsListener(concurrency= "10", destination = "Consumer.A.VirtualTopic.PruebaAlex")
+	@JmsListener(destination = "Consumer.A.VirtualTopic.PruebaAlex")
 	public void receiveQueue(String text) {
 		
 		System.out.println(text);
